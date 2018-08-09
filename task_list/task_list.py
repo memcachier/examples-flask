@@ -7,7 +7,11 @@ from task_list.models import Task
 
 bp = Blueprint('task_list', __name__)
 
+def is_post():
+    return (request.method == 'POST')
+
 @bp.route('/', methods=('GET', 'POST'))
+@cache.cached(unless=is_post)
 def index():
     if request.method == 'POST':
         name = request.form['name']
@@ -17,6 +21,7 @@ def index():
             db.session.add(Task(name=name))
             db.session.commit()
             cache.delete_memoized(get_all_tasks)
+            cache.delete('view//')
 
     tasks = get_all_tasks()
     return render_template('task_list/index.html', tasks=tasks)
@@ -28,6 +33,7 @@ def delete(id):
         db.session.delete(task)
         db.session.commit()
         cache.delete_memoized(get_all_tasks)
+        cache.delete('view//')
     return redirect(url_for('task_list.index'))
 
 @cache.memoize()
