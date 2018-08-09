@@ -16,6 +16,7 @@ def index():
         else:
             db.session.add(Task(name=name))
             db.session.commit()
+            cache.delete('all_tasks')
 
     tasks = cache.get('all_tasks')
     if tasks == None:
@@ -29,4 +30,5 @@ def delete(id):
     if task != None:
         db.session.delete(task)
         db.session.commit()
+        cache.delete('all_tasks')
     return redirect(url_for('task_list.index'))
