@@ -16,12 +16,9 @@ def index():
         else:
             db.session.add(Task(name=name))
             db.session.commit()
-            cache.delete('all_tasks')
+            cache.delete_memoized(get_all_tasks)
 
-    tasks = cache.get('all_tasks')
-    if tasks == None:
-        tasks = Task.query.all()
-        cache.set('all_tasks', tasks)
+    tasks = get_all_tasks()
     return render_template('task_list/index.html', tasks=tasks)
 
 @bp.route('/<int:id>/delete', methods=('POST',))
@@ -30,5 +27,9 @@ def delete(id):
     if task != None:
         db.session.delete(task)
         db.session.commit()
-        cache.delete('all_tasks')
+        cache.delete_memoized(get_all_tasks)
     return redirect(url_for('task_list.index'))
+
+@cache.memoize()
+def get_all_tasks():
+    return Task.query.all()
