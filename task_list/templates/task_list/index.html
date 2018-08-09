@@ -30,6 +30,7 @@
 
         <table class="table table-striped">
           {% for task in tasks %}
+            {% cache None, 'task-fragment', task['id']|string %}
             <tr>
               <!-- Task Name -->
               <td class="table-text">{{ task['name'] }}</td>
@@ -43,6 +44,7 @@
                 </form>
               </td>
             </tr>
+            {% endcache %}
           {% endfor %}
         </table>
       </div>
