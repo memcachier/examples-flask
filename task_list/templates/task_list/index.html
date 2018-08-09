@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1 style="text-align:center">{% block title %}Task List{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <!-- New Task Card -->
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">New Task</h5>
+
+      <form method="POST">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Task Name"
+                 name="name" required>
+        </div>
+        <button type="submit" class="btn btn-default">
+          <i class="fa fa-plus"></i> Add Task
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Current Tasks -->
+  {% if tasks %}
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Current Tasks</h5>
+
+        <table class="table table-striped">
+          {% for task in tasks %}
+            <tr>
+              <!-- Task Name -->
+              <td class="table-text">{{ task['name'] }}</td>
+              <!-- Delete Button -->
+              <td>
+                <form action="{{ url_for('task_list.delete', id=task['id']) }}"
+                      method="POST">
+                  <button type="submit" class="btn btn-danger">
+                    <i class="fa fa-trash"></i> Delete
+                  </button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
