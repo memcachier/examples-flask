@@ -1,0 +1,19 @@
+{
+  "name": "MemCachier Flask Tutorial",
+  "description": "Python Flask app for a tutorial on using Flask, MemCachier and Heroku together",
+  "keywords": ["python", "flask", "memcache", "memcached", "memcachier", "caching", "tutorial", "performance" ],
+  "logo": "https://www.memcachier.com/assets/logo-large.png",
+  "image": "heroku/python",
+  "website": "https://www.memcachier.com",
+  "repository": "https://github.com/memcachier/examples-flask",
+  "addons": [ "heroku-postgresql:hobby-dev", "memcachier" ],
+  "env": {
+    "FLASK_APP": {
+      "value": "task_list"
+    },
+    "SECRET_KEY": {
+      "description": "This should be changed with `heroku config:set SECRET_KEY=\"`< /dev/urandom tr -dc 'a-zA-Z0-9' | head -c16`\"` after the initial deploy.",
+      "value": "JV1UkrN94PySSFUZ"
+    }
+  },
+}
