@@ -39,3 +39,14 @@ def delete(id):
 @cache.memoize()
 def get_all_tasks():
     return Task.query.all()
+
+
+from flask import Flask, session
+@bp.route('/set/')
+def set():
+    session['key'] = 'value'
+    return 'ok'
+
+@bp.route('/get/')
+def get():
+    return session.get('key', 'not set')

@@ -3,6 +3,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_caching import Cache
+import pylibmc
+from flask_session import Session
 
 cache = Cache()
 db = SQLAlchemy()
@@ -46,6 +48,29 @@ def create_app():
                         'remove_failed': 1,
                         'retry_timeout': 2,
                         'dead_timeout': 30}}})
+        app.config.update(
+            SESSION_TYPE = 'memcached',
+            SESSION_MEMCACHED =
+                pylibmc.Client(cache_servers.split(','), binary=True,
+                               username=cache_user, password=cache_pass,
+                               behaviors={
+                                     # Faster IO
+                                     'tcp_nodelay': True,
+                                     # Keep connection alive
+                                     'tcp_keepalive': True,
+                                     # Timeout for set/get requests
+                                     'connect_timeout': 2000, # ms
+                                     'send_timeout': 750 * 1000, # us
+                                     'receive_timeout': 750 * 1000, # us
+                                     '_poll_timeout': 2000, # ms
+                                     # Better failover
+                                     'ketama': True,
+                                     'remove_failed': 1,
+                                     'retry_timeout': 2,
+                                     'dead_timeout': 30,
+                               })
+        )
+    Session(app)
 
     from . import models
 
