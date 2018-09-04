@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<title>{% block title %}{% endblock %} - MemCachier Flask Tutorial</title>
+<!-- Fonts -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css"
+      rel='stylesheet' type='text/css' />
+<!-- Bootstrap CSS -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      rel="stylesheet" />
+
+<section class="content">
+  <div class="container">
+    <header>
+      {% block header %}{% endblock %}
+    </header>
+    {% for message in get_flashed_messages() %}
+      <div class="alert alert-danger">
+        <p class="lead">{{ message }}</p>
+      </div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </div>
+</section>
+
+<!-- Bootstrap related JavaScript -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
