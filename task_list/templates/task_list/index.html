@@ -30,19 +30,21 @@
 
         <table class="table table-striped">
           {% for task in tasks %}
-            <tr>
-              <!-- Task Name -->
-              <td class="table-text">{{ task['name'] }}</td>
-              <!-- Delete Button -->
-              <td>
-                <form action="{{ url_for('task_list.delete', id=task['id']) }}"
-                      method="POST">
-                  <button type="submit" class="btn btn-danger">
-                    <i class="fa fa-trash"></i> Delete
-                  </button>
-                </form>
-              </td>
-            </tr>
+            {% cache None, 'task-fragment', task['id']|string %}
+              <tr>
+                <!-- Task Name -->
+                <td class="table-text">{{ task['name'] }}</td>
+                <!-- Delete Button -->
+                <td>
+                  <form action="{{ url_for('task_list.delete', id=task['id']) }}"
+                        method="POST">
+                    <button type="submit" class="btn btn-danger">
+                      <i class="fa fa-trash"></i> Delete
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            {% endcache %}
           {% endfor %}
         </table>
       </div>
