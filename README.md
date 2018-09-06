@@ -1,18 +1,35 @@
-# MemCachier and Flask on Heroku tutorial
+# MemCachier and Flask on Elastic Beanstalk tutorial
 
 This is an example Flask task list app that uses
-the [MemCachier add-on](https://addons.heroku.com/memcachier) on
-[Heroku](http://www.heroku.com/). A running version of this app can be
-found [here](http://memcachier-examples-flask.herokuapp.com).
+the [MemCachier](https://www.memcachier.com) on
+[Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/).
 
 Detailed instructions for developing this app are available
-[here](https://devcenter.heroku.com/articles/flask-memcache).
+[here](https://blog.memcachier.com/flask-elastic-beanstalk-and-memcache).
 
-## Deploy to Heroku
+## Deploy to Elastic Beanstalk
 
-You can deploy this app yourself to Heroku to play with.
+You can deploy this app yourself to Elastic Beanstalk to deploy it yourself.
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+```bash
+$ eb init -p python-3.6 flask-memcache --region us-east-2
+$ eb create flask-env -db.engine postgres
+# pick a username/password for your database.
+```
+
+Then add MemCachier environment variables to your Elastic Beanstalk environment:
+
+```bash
+(venv) $ eb setenv MEMCACHIER_USERNAME=<username>\
+  MEMCACHIER_PASSWORD=<password>\
+  MEMCACHIER_SERVERS=<servers>\
+```
+
+Finally, deploy to Elastic Beanstalk.
+
+```bash
+$ eb deploy
+```
 
 ## Running Locally
 
@@ -25,29 +42,11 @@ $ mkdir instance
 $ python -m venv venv
 $ source venv/bin/activate
 (venv) $ pip install -r requirements.txt
-(venv) $ FLASK_APP=task_list flask db upgrade
-(venv) $ FLASK_APP=task_list FLASK_ENV=development flask run
+(venv) $ FLASK_APP=application.py flask db upgrade
+(venv) $ FLASK_APP=application.py FLASK_ENV=development flask run
 ```
 
 Then visit `http://localhost:5000` to play with the app.
-
-## Deploying to Heroku
-
-Run the following commands to deploy the app to Heroku:
-
-```sh
-$ git clone https://github.com/memcachier/examples-flask.git
-$ cd examples-flask
-$ heroku create
-Creating app... done, ⬢ rocky-chamber-17110
-https://rocky-chamber-17110.herokuapp.com/ | https://git.heroku.com/rocky-chamber-17110.git
-$ heroku addons:create memcachier:dev
-$ heroku addons:create heroku-postgresql:hobby-dev
-$ heroku config:set FLASK_APP=task_list
-$ heroku config:set SECRET_KEY="`< /dev/urandom tr -dc 'a-zA-Z0-9' | head -c16`"
-$ git push heroku master
-$ heroku open
-```
 
 ## Get involved!
 
@@ -60,6 +59,7 @@ Please report bugs via the
 Master [git repository](http://github.com/memcachier/examples-flask):
 
 * `git clone git://github.com/memcachier/examples-flask.git`
+* `git checkout elastic-beanstalk`
 
 ## Licensing
 
