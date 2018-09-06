@@ -11,7 +11,10 @@ db = SQLAlchemy()
 migrate = Migrate()
 
 def create_app():
+    app = Flask(__name__)
+
     if 'RDS_HOSTNAME' in os.environ:
+        print('Using production db')
         DATABASE = {
             'NAME': os.environ['RDS_DB_NAME'],
             'USER': os.environ['RDS_USERNAME'],
@@ -19,14 +22,14 @@ def create_app():
             'HOST': os.environ['RDS_HOSTNAME'],
             'PORT': os.environ['RDS_PORT'],
         }
+        database_url = 'postgresql://%(USER)s:%(PASSWORD)s@%(HOST)s:%(PORT)s/%(NAME)s' % DATABASE
+    else:
+        print('Using local db')
+        database_url = 'sqlite:///' + os.path.join(app.instance_path, 'task_list.sqlite')
 
-    database_url = 'postgresql://%(USER)s:%(PASSWORD)s@%(HOST)s:%(PORT)s/%(NAME)s' % DATABASE
-
-    app = Flask(__name__)
     app.config.from_mapping(
         SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev_key',
-        SQLALCHEMY_DATABASE_URI = database_url or \
-            'sqlite:///' + os.path.join(app.instance_path, 'task_list.sqlite'),
+        SQLALCHEMY_DATABASE_URI = database_url,
         SQLALCHEMY_TRACK_MODIFICATIONS = False
     )
 
